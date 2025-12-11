@@ -11,6 +11,83 @@ class Solution {
 }
 
 /*
+# 위 코드를 공간 최적화하기: F(N) 구할때 F(N-1),F(N-2)만 필요함.
+class Solution {
+    public int[] solution(int n) {
+        if(n == 0) return 0;
+        if(n == 1) return 1;
+        int mod = 1234567;
+        int a = 0;
+        int b = 1;
+        for(int i = 2; i <= n; i++){
+            int c = (a + b) & mod;
+            a = b;
+            b = c;
+        }
+        return b;
+    }
+}
+
+# 피보나치 = 행렬 거듭제곱 (분할정복 거듭제곱)
+“M = [[1,1],[1,0]]를 곱하면 [F(n+1), F(n)]으로 한 칸씩 앞으로 간다.”
+“그걸 n번 반복하는 대신 M^n을 한 번에 구해서, 첫 번째 열의 아래를 F(n)으로 읽는다.”
+=> 수학적 귀납법으로 쉽게 보임.
+class Solution {
+    private static final int MOD = 1234567;
+
+    public int solution(int n) {
+        if (n == 0) return 0;
+        long[][] base = {{1, 1}, {1, 0}};
+        long[][] res = matrixPow(base, n);
+        // res[1][0] = F(n)
+        return (int)(res[1][0] % MOD);
+    }
+
+    private long[][] matrixMul(long[][] A, long[][] B) {
+        long[][] C = new long[2][2];
+        C[0][0] = (A[0][0] * B[0][0] + A[0][1] * B[1][0]) % MOD;
+        C[0][1] = (A[0][0] * B[0][1] + A[0][1] * B[1][1]) % MOD;
+        C[1][0] = (A[1][0] * B[0][0] + A[1][1] * B[1][0]) % MOD;
+        C[1][1] = (A[1][0] * B[0][1] + A[1][1] * B[1][1]) % MOD;
+        return C;
+    }
+
+    private long[][] matrixPow(long[][] M, int n) {
+        if (n == 1) return M;
+        if (n % 2 == 0) {
+            long[][] half = matrixPow(M, n / 2);
+            return matrixMul(half, half);
+        } else {
+            return matrixMul(M, matrixPow(M, n - 1));
+        }
+    }
+}
+
+# Fast Doubling: 피보나치 분할정복, O(log n)
+class Solution {
+    private static final int MOD = 1234567;
+
+    public int solution(int n) {
+        return (int)(fib(n)[0] % MOD); // fib(n) = {F(n), F(n+1)}
+    }
+
+    private long[] fib(int n) {
+        if (n == 0) return new long[]{0, 1};
+        long[] half = fib(n / 2);
+        long a = half[0]; // F(k)
+        long b = half[1]; // F(k+1)
+
+        long c = (a * ((2 * b % MOD - a + MOD) % MOD)) % MOD; // F(2k)
+        long d = ((a * a) % MOD + (b * b) % MOD) % MOD;       // F(2k+1)
+
+        if (n % 2 == 0) {
+            return new long[]{c, d};
+        } else {
+            return new long[]{d, (c + d) % MOD};
+        }
+    }
+}
+
 # LCS 길이 구하기(최장 공통 길이 수열)
 class Solution {
     private static int solution(String s1, String s2){
