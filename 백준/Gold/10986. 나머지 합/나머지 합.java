@@ -14,9 +14,6 @@ public class Main {
         long answer = 0;
         st = new StringTokenizer(br.readLine());
         for(int i = 1; i <= N; i++){
-            while(!st.hasMoreTokens()){
-                st = new StringTokenizer(br.readLine());
-            }
             sum[i] = sum[i - 1] + Integer.parseInt(st.nextToken());
             int remainder = (int) (sum[i] % M);
             if(remainder == 0) answer++;
