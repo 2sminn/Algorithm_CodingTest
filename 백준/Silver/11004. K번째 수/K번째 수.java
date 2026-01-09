@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+// QuickSort가 아닌 QuickSelect. 차이점은 퀵정렬은 왼쪽,오른쪽 둘 다 정렬(재귀), 퀵소트는 K가 있는쪽만 정렬
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
